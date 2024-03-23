@@ -39,12 +39,16 @@ void init_intetrrupt()
 
     idtr.limit = sizeof(struct idtdescentry) * 256 - 1;
     idtr.offset = (uint64_t)request_page();
+
     memset((void *)idtr.offset, 0, sizeof(struct idtdescentry) * 256);
 
     for (int i = 0; i < 256; i++)
     {
         set_idt_gate((uint64_t)GenericInterrupt_Handler, i, IDT_TA_InterruptGate, 0x28);
     }
+
+    set_idt_gate((uint64_t)PageFault_Handler, 0x0E, IDT_TA_InterruptGate, 0x28);
+    set_idt_gate((uint64_t)DoubleFault_Handler, 0x08, IDT_TA_InterruptGate, 0x28);
 
     __asm__ volatile("lidt %0" : : "m"(idtr));
 
