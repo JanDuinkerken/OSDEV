@@ -32,7 +32,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
+#include "../bootservices/bootservices.h"
 #include "printf.h"
 
 // define this globally (e.g. gcc -DPRINTF_INCLUDE_CONFIG_H ...) to include the
