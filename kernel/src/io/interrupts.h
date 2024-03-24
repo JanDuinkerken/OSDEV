@@ -3,7 +3,8 @@
 #include "idt.h"
 
 struct interrupt_frame;
-__attribute__((interrupt)) void GenericException_Handler(struct interrupt_frame *frame);
+__attribute__((interrupt)) void
+GenericException_Handler(struct interrupt_frame *frame);
 
 void init_interrupts();
 #endif

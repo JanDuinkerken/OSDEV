@@ -4,8 +4,7 @@
 #define PAGESIZE 0x1000
 #define STACKSIZE (0x16 * PAGESIZE)
 
-struct system_memory
-{
+struct system_memory {
     uint64_t total_available_pages;
     uint64_t first_available_page_addr;
     uint64_t last_available_page_address;

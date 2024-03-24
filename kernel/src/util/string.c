@@ -3,15 +3,12 @@
 
 void *memchr(const void *s, int c, size_t n) {}
 void *memmove(void *dest, const void *src, size_t n) {}
-void *strcat(char *dest, const char *src)
-{
+void *strcat(char *dest, const char *src) {
     char *dest_start = dest;
-    while (*dest != '\0')
-    {
+    while (*dest != '\0') {
         dest++;
     }
-    while (*src != '\0')
-    {
+    while (*src != '\0') {
         *dest = *src;
         dest++;
         src++;
@@ -19,15 +16,12 @@ void *strcat(char *dest, const char *src)
     *dest = '\0';
     return dest_start;
 }
-void *strncat(char *dest, const char *src, size_t n)
-{
+void *strncat(char *dest, const char *src, size_t n) {
     char *dest_start = dest;
-    while (*dest != '\0')
-    {
+    while (*dest != '\0') {
         dest++;
     }
-    while (*src != '\0' && n > 0)
-    {
+    while (*src != '\0' && n > 0) {
         *dest = *src;
         dest++;
         src++;
@@ -36,35 +30,27 @@ void *strncat(char *dest, const char *src, size_t n)
     *dest = '\0';
     return dest_start;
 }
-void *strchr(const char *str, int ch)
-{
-    while (*str != '\0')
-    {
-        if (*str == ch)
-        {
+void *strchr(const char *str, int ch) {
+    while (*str != '\0') {
+        if (*str == ch) {
             return (char *)str;
         }
         str++;
     }
-    if (*str == ch)
-    {
+    if (*str == ch) {
         return (char *)str;
     }
     return 0;
 }
 int strcoll(const char *s1, const char *s2) {}
-size_t strcspn(const char *str, const char *reject)
-{
+size_t strcspn(const char *str, const char *reject) {
     const char *s = str;
     size_t count = 0;
 
-    while (*s)
-    {
+    while (*s) {
         const char *r = reject;
-        while (*r)
-        {
-            if (*s == *r)
-            {
+        while (*r) {
+            if (*s == *r) {
                 return count;
             }
             r++;
@@ -77,37 +63,29 @@ size_t strcspn(const char *str, const char *reject)
 }
 char *strerror(int errnum) {}
 char *strpbrk(const char *s, const char *accept) {}
-char *strrchr(const char *str, int ch)
-{
+char *strrchr(const char *str, int ch) {
     char *last = 0;
-    while (*str != '\0')
-    {
-        if (*str == ch)
-        {
+    while (*str != '\0') {
+        if (*str == ch) {
             last = (char *)str;
         }
         str++;
     }
-    if (*str == ch)
-    {
+    if (*str == ch) {
         last = (char *)str;
     }
     return last;
 }
 size_t strspn(const char *s, const char *accept) {}
-char *strstr(const char *haystack, const char *needle)
-{
-    while (*haystack != '\0')
-    {
+char *strstr(const char *haystack, const char *needle) {
+    while (*haystack != '\0') {
         const char *h = haystack;
         const char *n = needle;
-        while (*h == *n && *n != '\0')
-        {
+        while (*h == *n && *n != '\0') {
             h++;
             n++;
         }
-        if (*n == '\0')
-        {
+        if (*n == '\0') {
             return (char *)haystack;
         }
         haystack++;
@@ -116,56 +94,40 @@ char *strstr(const char *haystack, const char *needle)
 }
 size_t strxfrm(char *dest, const char *src, size_t n) {}
 
-uint8_t atou8(const char *nptr)
-{
-    return (uint8_t)atou64(nptr);
-}
+uint8_t atou8(const char *nptr) { return (uint8_t)atou64(nptr); }
 
-uint64_t atou64(const char *nptr)
-{
+uint64_t atou64(const char *nptr) {
 
     // Check if prefix is 0x or 0b for hex or binary
-    while (isspace(*nptr))
-    {
+    while (isspace(*nptr)) {
         nptr++;
     }
     uint64_t base = 10;
-    if (nptr[0] == '0' && nptr[1] == 'x')
-    {
+    if (nptr[0] == '0' && nptr[1] == 'x') {
         base = 16;
         nptr += 2;
-    }
-    else if (nptr[0] == '0' && nptr[1] == 'b')
-    {
+    } else if (nptr[0] == '0' && nptr[1] == 'b') {
         base = 2;
         nptr += 2;
     }
 
-    while (!isdigit(*nptr))
-    {
+    while (!isdigit(*nptr)) {
         nptr++;
     }
 
     uint64_t result = 0;
     uint64_t multiplier = 1;
     uint64_t len = strlen(nptr);
-    for (uint64_t i = 0; i < len; i++)
-    {
+    for (uint64_t i = 0; i < len; i++) {
         char c = nptr[len - i - 1];
         uint64_t digit = 0;
 
-        if (isdigit(c))
-        {
+        if (isdigit(c)) {
             digit = c - '0'; // Convert decimal digit
-        }
-        else if (isxdigit(c))
-        {
-            if (c >= 'a' && c <= 'f')
-            {
+        } else if (isxdigit(c)) {
+            if (c >= 'a' && c <= 'f') {
                 digit = c - 'a' + 10; // Convert lowercase hex digit
-            }
-            else if (c >= 'A' && c <= 'F')
-            {
+            } else if (c >= 'A' && c <= 'F') {
                 digit = c - 'A' + 10; // Convert uppercase hex digit
             }
         }
@@ -176,8 +138,7 @@ uint64_t atou64(const char *nptr)
     return result;
 }
 
-uint64_t strtoull(const char *nptr, char **endptr, register int base)
-{
+uint64_t strtoull(const char *nptr, char **endptr, register int base) {
     register const char *s = nptr;
     register uint64_t acc;
     register int c;
@@ -187,20 +148,15 @@ uint64_t strtoull(const char *nptr, char **endptr, register int base)
     /*
      * See strtol for comments as to the logic used.
      */
-    do
-    {
+    do {
         c = *s++;
     } while (isspace(c));
-    if (c == '-')
-    {
+    if (c == '-') {
         neg = 1;
         c = *s++;
-    }
-    else if (c == '+')
+    } else if (c == '+')
         c = *s++;
-    if ((base == 0 || base == 16) &&
-        c == '0' && (*s == 'x' || *s == 'X'))
-    {
+    if ((base == 0 || base == 16) && c == '0' && (*s == 'x' || *s == 'X')) {
         c = s[1];
         s += 2;
         base = 16;
@@ -209,8 +165,7 @@ uint64_t strtoull(const char *nptr, char **endptr, register int base)
         base = c == '0' ? 8 : 10;
     cutoff = (uint64_t)ULLONG_MAX / (uint64_t)base;
     cutlim = (uint64_t)ULLONG_MAX % (uint64_t)base;
-    for (acc = 0, any = 0;; c = *s++)
-    {
+    for (acc = 0, any = 0;; c = *s++) {
         if (isdigit(c))
             c -= '0';
         else if (isalpha(c))
@@ -221,49 +176,38 @@ uint64_t strtoull(const char *nptr, char **endptr, register int base)
             break;
         if (any < 0 || acc > cutoff || (acc == cutoff && c > cutlim))
             any = -1;
-        else
-        {
+        else {
             any = 1;
             acc *= base;
             acc += c;
         }
     }
-    if (any < 0)
-    {
+    if (any < 0) {
         acc = ULLONG_MAX;
-    }
-    else if (neg)
+    } else if (neg)
         acc = -acc;
     if (endptr != 0)
         *endptr = (char *)(any ? s - 1 : nptr);
     return (acc);
 }
 
-char *strtok(char *s, const char *delim)
-{
+char *strtok(char *s, const char *delim) {
     static char *lastToken = 0;
-    if (s != 0)
-    {
+    if (s != 0) {
         lastToken = s;
-    }
-    else if (lastToken == 0)
-    {
+    } else if (lastToken == 0) {
         return 0;
     }
 
     char *tokenStart = lastToken;
 
-    while (*lastToken != '\0')
-    {
+    while (*lastToken != '\0') {
         const char *d = delim;
-        while (*d != '\0')
-        {
-            if (*lastToken == *d)
-            {
+        while (*d != '\0') {
+            if (*lastToken == *d) {
                 *lastToken = '\0';
                 lastToken++;
-                if (tokenStart == lastToken - 1)
-                {
+                if (tokenStart == lastToken - 1) {
                     tokenStart = lastToken;
                     continue;
                 }
@@ -274,39 +218,32 @@ char *strtok(char *s, const char *delim)
         lastToken++;
     }
 
-    if (tokenStart == lastToken)
-    {
+    if (tokenStart == lastToken) {
         return 0;
     }
 
     return tokenStart;
 }
 
-uint64_t strlen(const char *str)
-{
+uint64_t strlen(const char *str) {
     uint64_t len = 0;
-    while (*str++ && len < STR_MAX_SIZE)
-    {
+    while (*str++ && len < STR_MAX_SIZE) {
         len++;
     }
     return len;
 }
 
-void *memset(void *dest, int val, uint64_t size)
-{
+void *memset(void *dest, int val, uint64_t size) {
     uint8_t *d = (uint8_t *)dest;
-    for (uint64_t i = 0; i < size; i++)
-    {
+    for (uint64_t i = 0; i < size; i++) {
         d[i] = val;
     }
     return dest;
 }
 
-char *strcpy(char *dest, const char *src)
-{
+char *strcpy(char *dest, const char *src) {
     uint64_t i = 0;
-    while (src[i] != '\0')
-    {
+    while (src[i] != '\0') {
         dest[i] = src[i];
         i++;
     }
@@ -314,75 +251,60 @@ char *strcpy(char *dest, const char *src)
     return dest;
 }
 
-void strncpy(char *dest, const char *src, uint64_t n)
-{
+void strncpy(char *dest, const char *src, uint64_t n) {
     uint64_t i = 0;
-    if (strlen(src) < n)
-    {
+    if (strlen(src) < n) {
         n = strlen(src);
     }
-    while (i < n && src[i] != '\0')
-    {
+    while (i < n && src[i] != '\0') {
         dest[i] = src[i];
         i++;
     }
     dest[i] = '\0';
 }
 
-void *memcpy(void *dest, const void *src, uint64_t size)
-{
+void *memcpy(void *dest, const void *src, uint64_t size) {
     uint8_t *d = (uint8_t *)dest;
     uint8_t *s = (uint8_t *)src;
-    for (uint64_t i = 0; i < size; i++)
-    {
+    for (uint64_t i = 0; i < size; i++) {
         d[i] = s[i];
     }
     return dest;
 }
 
-int zerocheck(const void *dest, uint64_t size)
-{
+int zerocheck(const void *dest, uint64_t size) {
     uint8_t *d = (uint8_t *)dest;
-    for (uint64_t i = 0; i < size; i++)
-    {
-        if (d[i] != 0)
-        {
+    for (uint64_t i = 0; i < size; i++) {
+        if (d[i] != 0) {
             return i;
         }
     }
     return -1;
 }
 
-uint64_t memcmp(const void *dest, const void *src, uint64_t size)
-{
+uint64_t memcmp(const void *dest, const void *src, uint64_t size) {
     uint8_t *d = (uint8_t *)dest;
     uint8_t *s = (uint8_t *)src;
-    for (uint64_t i = 0; i < size; i++)
-    {
-        if (d[i] != s[i])
-        {
+    for (uint64_t i = 0; i < size; i++) {
+        if (d[i] != s[i]) {
             return 1;
         }
     }
     return 0;
 }
 
-int strcmp(const char *s1, const char *s2)
-{
-    while (*s1 && *s2 && *s1 == *s2)
-    {
+int strcmp(const char *s1, const char *s2) {
+    while (*s1 && *s2 && *s1 == *s2) {
         s1++;
         s2++;
     }
     return *s1 - *s2;
 }
 
-int strncmp(const char *s1, const char *s2, uint64_t n)
-{
+int strncmp(const char *s1, const char *s2, uint64_t n) {
     if (n == 0)
         return (0);
-    do
-    {
+    do {
         if (*s1 != *s2++)
             return (*(const unsigned char *)s1 - *(const unsigned char *)--s2);
         if (*s1++ == 0)
@@ -391,8 +313,7 @@ int strncmp(const char *s1, const char *s2, uint64_t n)
     return (0);
 }
 
-void store32(void *dest, uint32_t value)
-{
+void store32(void *dest, uint32_t value) {
     uint8_t *dest_ptr = (uint8_t *)dest;
     *dest_ptr++ = (uint8_t)value;
     value >>= 8;
@@ -403,16 +324,14 @@ void store32(void *dest, uint32_t value)
     *dest_ptr++ = (uint8_t)value;
 }
 
-void store16(void *dest, uint16_t value)
-{
+void store16(void *dest, uint16_t value) {
     uint8_t *dest_ptr = (uint8_t *)dest;
     *dest_ptr++ = (uint8_t)value;
     value >>= 8;
     *dest_ptr++ = (uint8_t)value;
 }
 
-uint64_t load64(const void *src)
-{
+uint64_t load64(const void *src) {
     uint64_t value = 0;
     const uint8_t *src_ptr = (const uint8_t *)src;
     value |= *src_ptr++;
@@ -426,8 +345,7 @@ uint64_t load64(const void *src)
     return value;
 }
 
-uint64_t load48(const void *src)
-{
+uint64_t load48(const void *src) {
     uint64_t value = 0;
     const uint8_t *src_ptr = (const uint8_t *)src;
     value |= *src_ptr++;
@@ -439,8 +357,7 @@ uint64_t load48(const void *src)
     return value;
 }
 
-uint32_t load32(const void *src)
-{
+uint32_t load32(const void *src) {
     uint32_t value = 0;
     const uint8_t *src_ptr = (const uint8_t *)src;
     value |= *src_ptr++;
@@ -450,8 +367,7 @@ uint32_t load32(const void *src)
     return value;
 }
 
-uint16_t load16(const void *src)
-{
+uint16_t load16(const void *src) {
     uint16_t value = 0;
     const uint8_t *src_ptr = (const uint8_t *)src;
     value |= *src_ptr++;
