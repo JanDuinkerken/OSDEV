@@ -5,13 +5,7 @@
 #include "util/printf.h"
 #include "util/string.h"
 
-void _start(void) {
-    init_simd();
-    init_memory();
-    init_interrupts(1);
-
-    printf("Hola Mundo\n");
-
+void test_memory_allocation() {
     int *buffer = (int *)request_page();
 
     for (int i = 0; i < 100; i++) {
@@ -20,6 +14,20 @@ void _start(void) {
     for (int i = 0; i < 100; i++) {
         printf("buffer[%d] at %p = %d\n", i, &(buffer[i]), buffer[i]);
     }
+
+}
+
+void _start(void) {
+    init_simd();
+    init_memory();
+    init_interrupts();
+
+    // test_memory_allocation();
+
+    // Trigger a Page Fault exception
+    printf("Attempting to write to a memory address that doesnt exist in physical memory\n");
+    int* ptr = (int*)0xfffffffffffffffffffff;
+    *ptr = 0;
 
     // Trigger a Divide by Zero exception
     int a = 5;
