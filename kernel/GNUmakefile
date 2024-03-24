@@ -34,7 +34,7 @@ VBOXCOM1PORT := 4441
 VBOXCOM2PORT := 4442
 VBOXCOM3PORT := 4443
 VBOXCOM4PORT := 4444
-CMDNEWSCREEN := cmd.exe /c start cmd /c wsl -e
+CMDNEWSCREEN := konsole -e
 MNTDIR := /mnt/quackOS
 
 
