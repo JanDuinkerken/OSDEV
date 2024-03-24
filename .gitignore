@@ -399,3 +399,9 @@ FodyWeavers.xsd
 
 # DS_Store
 .DS_Store
+
+# Folders and files created when running make setup
+kernel/limine
+kernel/build
+kernel/debug.gdb
+
