@@ -208,6 +208,8 @@ void iterate_memory(void (*callback)(void *, uint64_t, uint64_t, uint64_t),
         uint64_t base = get_memory_map_base(index);
         uint64_t length = get_memory_map_length(index);
         uint64_t type = get_memory_map_type(index);
+        // printf("[mmap entry %d] base: %llx length: %llx type: %llx\n", index,
+        // base, length, type);
         callback(global_override, base, length, type);
     }
 }
@@ -236,9 +238,15 @@ int init_memory() {
         return 0;
 
     uint64_t total_memory = get_total_memory();
+    // uint64_t free_memory = get_free_memory();
     uint64_t total_pages = total_memory >> 12;
 
     iterate_memory(init_memory_cb, (void *)&biggest_avail_chunk);
+
+    // printf("Tenemos %llx bytes de memoria\n", total_memory);
+    // printf("Tenemos %llx bytes de memoria libre\n", free_memory);
+    // printf("Tenemos %llx bytes de memoria disponible\n",
+    // biggest_avail_chunk.size);
 
     uint64_t first_available_address = ALIGN_ADDR(biggest_avail_chunk.addr);
     uint64_t last_available_adress =
@@ -257,6 +265,7 @@ int init_memory() {
     memory->bitfield = (uint8_t *)ALIGN_ADDR(first_available_address +
                                              sizeof(struct system_memory *));
 
+    // 01010101
     memset(memory->bitfield, 0x55, 100);
 
     for (int i = 0; i < 100; i++) {

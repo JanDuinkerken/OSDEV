@@ -1,17 +1,26 @@
 #ifndef _GDT_H
 #define _GDT_H
 
-//https://wiki.osdev.org/Global_Descriptor_Table
-//https://github.com/kot-org/Kot/blob/main/Sources/Kernel/Src/arch/x86-64/gdt/gdt.h
+#define GDT_MAX_CPU 32
+
+// https://wiki.osdev.org/Global_Descriptor_Table
+// https://github.com/kot-org/Kot/blob/main/Sources/Kernel/Src/arch/x86-64/gdt/gdt.h
 
 #include <stdint.h>
 
-#define GDT_DPL_KERNEL                  0x0
-#define GDT_DPL_USER                    0x3
+#define GDT_NULL_ENTRY 0x0
+#define GDT_KERNEL_CODE_ENTRY 0x1
+#define GDT_KERNEL_DATA_ENTRY 0x2
+#define GDT_USER_CODE_ENTRY 0x3
+#define GDT_USER_DATA_ENTRY 0x4
+#define GDT_TSS_ENTRY 0x5
 
-#define GDT_SYSTEM_TYPE_LDT             0x2
-#define GDT_SYSTEM_TYPE_TSS_AVAILABLE   0x9
-#define GDT_SYSTEM_TYPE_TSS_BUSY        0xB
+#define GDT_DPL_KERNEL 0x0
+#define GDT_DPL_USER 0x3
+
+#define GDT_SYSTEM_TYPE_LDT 0x2
+#define GDT_SYSTEM_TYPE_TSS_AVAILABLE 0x9
+#define GDT_SYSTEM_TYPE_TSS_BUSY 0xB
 
 #define MAX_GDT_ENTRIES ((65535) / sizeof(struct gdt_entry))
 
@@ -34,7 +43,7 @@ struct gdt_flags {
 } __attribute__((packed));
 
 struct gdt_system_access_byte {
-    uint8_t type: 4;
+    uint8_t type : 4;
     uint8_t s : 1;
     uint8_t dpl : 2;
     uint8_t p : 1;
@@ -70,10 +79,11 @@ struct gdt_tss_entry {
     uint32_t reserved;
 } __attribute__((packed));
 
-void init_gdt();
-extern void load_gdt(struct gdt_descriptor *gdt);
-void debug_gdt();
-uint16_t create_tss_descriptor(uint64_t base, uint64_t limit);
+extern void _load_gdt(struct gdt_descriptor *gdt);
+
+void create_gdt();
+void load_gdt(uint8_t cpu);
+struct tss *get_tss(uint64_t index);
 uint16_t get_kernel_code_selector();
 uint16_t get_kernel_data_selector();
 uint16_t get_user_code_selector();

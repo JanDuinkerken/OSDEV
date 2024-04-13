@@ -15,10 +15,10 @@ struct bmoon_smp_info {
     uint64_t extra_argument;
 };
 
-void   (*get_terminal_writer())(const char*, uint64_t);
+void (*get_terminal_writer())(const char *, uint64_t);
 
-char*    get_bootloader_name();
-char*    get_bootloader_version();
+char *get_bootloader_name();
+char *get_bootloader_version();
 
 uint64_t get_terminal_count();
 uint64_t get_current_terminal();
@@ -41,9 +41,9 @@ uint64_t get_smbios64_address();
 uint32_t get_smp_flags();
 uint32_t get_smp_bsp_lapic_id();
 uint64_t get_smp_cpu_count();
-struct bmoon_smp_info ** get_smp_cpus();
+struct bmoon_smp_info **get_smp_cpus();
 
-void     set_terminal_extra_handler(); //TODO
-void     set_terminal_writer(uint64_t terminal);
+void set_terminal_extra_handler(); // TODO
+void set_terminal_writer(uint64_t terminal);
 
 #endif
