@@ -27,10 +27,14 @@ void trigger_divide_by_zero() {
     printf("The result is %d\n", b);
 }
 
-void _start(void) {
+void initialize() {
     init_simd();
     init_memory();
     init_interrupts();
+}
+
+void _start(void) {
+    initialize();
 
     // test_memory_allocation();
     trigger_page_fault();
