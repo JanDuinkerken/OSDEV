@@ -406,4 +406,4 @@ FodyWeavers.xsd
 # Folders and files created when running make setup
 kernel/limine
 kernel/build
-
+kernel/debug.gdb
