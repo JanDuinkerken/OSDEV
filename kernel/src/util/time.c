@@ -1,14 +1,14 @@
 #include "time.h"
 #include "../devices/pit/pit.h"
-#include "string.h"
 #include "printf.h"
+#include "string.h"
 
 char tzname[2][3] = {"CET", "CET"};
 int daylight = 0;
 long timezone = 0;
 
 void tzset(void) {
-    //Set timezone to Spanish time
+    // Set timezone to Spanish time
     memcpy(tzname[0], "CET", 3);
     memcpy(tzname[1], "CET", 3);
 }
@@ -34,54 +34,56 @@ struct tm *localtime(const time_t *timep) {
 }
 
 const char days[7][4] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-const char months[12][4] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+const char months[12][4] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-uint64_t strftime(char *s, uint64_t max, const char *format, const struct tm *tm) {
+uint64_t strftime(char *s, uint64_t max, const char *format,
+                  const struct tm *tm) {
     uint64_t i = 0;
     while (i < max && *format) {
         if (*format == '%') {
             format++;
             switch (*format) {
-                case 'a':
-                    memcpy(s+i, days[tm->tm_wday], 3);
-                    i += 3;
-                    break;
-                case 'b':
-                    memcpy(s+i, months[tm->tm_mon], 3);
-                    i += 3;
-                    break;
-                case 'd':
-                    snprintf(s+i, 3, "%02d", tm->tm_mday);
-                    i += 2;
-                    break;
-                case 'H':
-                    snprintf(s+i, 3, "%02d", tm->tm_hour);
-                    i += 2;
-                    break;
-                case 'M':
-                    snprintf(s+i, 3, "%02d", tm->tm_min);
-                    i += 2;
-                    break;
-                case 'S':
-                    snprintf(s+i, 3, "%02d", tm->tm_sec);
-                    i += 2;
-                    break;
-                case 'Y':
-                    snprintf(s+i, 5, "%04d", tm->tm_year + 1900);
-                    i += 4;
-                    break;
-                case 'Z':
-                    memcpy(s+i, tzname[0], 3);
-                    i += 3;
-                    break;
-                case '%':
-                    s[i] = '%';
-                    i++;
-                    break;
-                default:
-                    s[i] = *format;
-                    i++;
-                    break;
+            case 'a':
+                memcpy(s + i, days[tm->tm_wday], 3);
+                i += 3;
+                break;
+            case 'b':
+                memcpy(s + i, months[tm->tm_mon], 3);
+                i += 3;
+                break;
+            case 'd':
+                snprintf(s + i, 3, "%02d", tm->tm_mday);
+                i += 2;
+                break;
+            case 'H':
+                snprintf(s + i, 3, "%02d", tm->tm_hour);
+                i += 2;
+                break;
+            case 'M':
+                snprintf(s + i, 3, "%02d", tm->tm_min);
+                i += 2;
+                break;
+            case 'S':
+                snprintf(s + i, 3, "%02d", tm->tm_sec);
+                i += 2;
+                break;
+            case 'Y':
+                snprintf(s + i, 5, "%04d", tm->tm_year + 1900);
+                i += 4;
+                break;
+            case 'Z':
+                memcpy(s + i, tzname[0], 3);
+                i += 3;
+                break;
+            case '%':
+                s[i] = '%';
+                i++;
+                break;
+            default:
+                s[i] = *format;
+                i++;
+                break;
             }
         } else {
             s[i] = *format;
