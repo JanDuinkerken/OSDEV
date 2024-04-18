@@ -7,8 +7,8 @@ struct pit {
     uint64_t boot_epoch;
     uint64_t hertz;
 
-    volatile uint64_t timer_ticks ;
-    volatile uint8_t timer_subticks ;
+    volatile uint64_t timer_ticks;
+    volatile uint8_t timer_subticks;
 
     volatile uint64_t preemption_ticks;
     volatile uint8_t preemption_enabled;
@@ -24,7 +24,7 @@ void sleep_ticks(uint64_t);
 
 void tick();
 
-void set_wakeup_call(void (* handler)(), uint64_t ticks);
+void set_wakeup_call(void (*handler)(), uint64_t ticks);
 void set_preeption_ticks(uint64_t ticks);
 void enable_preemption();
 void preempt_toggle();

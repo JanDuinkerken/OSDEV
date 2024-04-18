@@ -11,7 +11,7 @@
 #define KEYBOARD_IRQ 0x21
 
 struct keyboard {
-    char * ASCII_table;
+    char *ASCII_table;
     uint8_t left_shift_pressed;
     uint8_t right_shift_pressed;
     uint8_t intro_buffered;

@@ -42,7 +42,7 @@
 #define LD_NEWLINE 10
 
 #define LD_DEFAULT_TABLE 0
- 
+
 #define LD_INSERT_SIZE 4
 #define LD_OUTPUT_SIZE 4
 
@@ -58,9 +58,9 @@ struct line_discipline {
 
     struct line_discipline_action_table_entry *action_table;
 
-    void* parent;
-    void (*flush_cb)(void* parent, char* buffer, int size);
-    void (*echo_cb)(void* parent, char c);
+    void *parent;
+    void (*flush_cb)(void *parent, char *buffer, int size);
+    void (*echo_cb)(void *parent, char c);
 };
 
 struct line_discipline_action_table_entry {
@@ -68,17 +68,23 @@ struct line_discipline_action_table_entry {
     char inserti[LD_INSERT_SIZE];
     char inserto[LD_OUTPUT_SIZE];
 
-    int (*action)(struct line_discipline*, char);
+    int (*action)(struct line_discipline *, char);
 };
 
-struct line_discipline * line_discipline_create(int mode, int echo, int table, int buffer_size, void* parent, void (*flush_cb)(void* parent, char *buffer, int size), void (*echo_cb)(void* parent, char c));
+struct line_discipline *
+line_discipline_create(int mode, int echo, int table, int buffer_size,
+                       void *parent,
+                       void (*flush_cb)(void *parent, char *buffer, int size),
+                       void (*echo_cb)(void *parent, char c));
 void line_discipline_destroy(struct line_discipline *ld);
 void line_discipline_set_mode(struct line_discipline *ld, int mode);
 void line_discipline_set_echo(struct line_discipline *ld, int echo);
 void line_discipline_debug();
 
 void line_discipline_read(struct line_discipline *ld, char character);
-int line_discipline_translate(struct line_discipline *ld, char original_character, char* translated_characters);
+int line_discipline_translate(struct line_discipline *ld,
+                              char original_character,
+                              char *translated_characters);
 void line_discipline_force_flush(struct line_discipline *ld);
 
 #endif

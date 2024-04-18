@@ -6,8 +6,8 @@
 #include "ext2_util.h"
 
 #include "../../../memory/heap.h"
-#include "../../../util/string.h"
 #include "../../../util/printf.h"
+#include "../../../util/string.h"
 
 #define EXT2_MAX_ERRORS 1024
 #define EXT2_DELETE_CYCLE 128
@@ -19,7 +19,7 @@ struct error_message {
     uint32_t line;
     uint8_t type;
     uint64_t id;
-    struct error_message * next;
+    struct error_message *next;
 };
 
 char debug_base_path[ERROR_FILE_SIZE] = {0};
@@ -29,16 +29,13 @@ uint64_t error_deletion_counter = 0;
 uint64_t error_id = 0;
 uint8_t errors_inhibited = 0;
 
-const char* error_type_names[] = {
-    "DEBUG",
-    "\x1B[34mINFO\x1B[0m ",
-    "\x1B[33mWARN\x1B[0m ",
-    "\x1B[31mERROR\x1B[0m"
-};
+const char *error_type_names[] = {"DEBUG", "\x1B[34mINFO\x1B[0m ",
+                                  "\x1B[33mWARN\x1B[0m ",
+                                  "\x1B[31mERROR\x1B[0m"};
 
-struct error_message * error_messages = 0;
+struct error_message *error_messages = 0;
 
-void ext2_set_debug_base_path(const char* path) {
+void ext2_set_debug_base_path(const char *path) {
     if (strlen(path) > ERROR_FILE_SIZE) {
         printf("[EXT2] Path too long for debug base path\n");
         return;
@@ -47,10 +44,10 @@ void ext2_set_debug_base_path(const char* path) {
     strncpy(debug_base_path, path, strlen(path));
 }
 
-char* ext2_format_message(const char* error, ...) {
+char *ext2_format_message(const char *error, ...) {
     va_list args;
     va_start(args, error);
-    char * buffer = malloc(ERROR_MESSAGE_SIZE);
+    char *buffer = malloc(ERROR_MESSAGE_SIZE);
     if (buffer == 0) {
         printf("[EXT2] Failed to allocate memory for error message\n");
         return 0;
@@ -65,8 +62,8 @@ void ext2_clear_oldest_error() {
         return;
     }
 
-    struct error_message * message = error_messages;
-    struct error_message * prev = 0;
+    struct error_message *message = error_messages;
+    struct error_message *prev = 0;
     while (message->next != 0) {
         prev = message;
         message = message->next;
@@ -82,30 +79,30 @@ void ext2_clear_oldest_error() {
 }
 
 void ext2_make_space() {
-    
+
     for (uint32_t i = 0; i < EXT2_DELETE_CYCLE; i++) {
         ext2_clear_oldest_error();
     }
 
     error_count -= EXT2_DELETE_CYCLE;
     error_deletion_counter++;
-    EXT2_WARN("Error count exceeded %d, deleting oldest %d errors", EXT2_MAX_ERRORS, EXT2_DELETE_CYCLE);
+    EXT2_WARN("Error count exceeded %d, deleting oldest %d errors",
+              EXT2_MAX_ERRORS, EXT2_DELETE_CYCLE);
 
-    if (error_deletion_counter >= 0xFFFFFFFFFFFFFFFF/EXT2_DELETE_CYCLE) {
+    if (error_deletion_counter >= 0xFFFFFFFFFFFFFFFF / EXT2_DELETE_CYCLE) {
         EXT2_WARN("Error deletion counter overflowed, resetting to 0");
         error_deletion_counter = 0;
     }
 }
 
-void ext2_integrity_inhibit_errors(uint8_t t) {
-    errors_inhibited = t;
-}
+void ext2_integrity_inhibit_errors(uint8_t t) { errors_inhibited = t; }
 
 uint64_t ext2_get_error_deletion_counter() {
-    return error_deletion_counter*EXT2_DELETE_CYCLE;
+    return error_deletion_counter * EXT2_DELETE_CYCLE;
 }
 
-void ext2_add_error(char * error, const char* function, char* file, uint32_t line, uint8_t type) {
+void ext2_add_error(char *error, const char *function, char *file,
+                    uint32_t line, uint8_t type) {
     if (errors_inhibited) {
         free(error);
         return;
@@ -116,7 +113,7 @@ void ext2_add_error(char * error, const char* function, char* file, uint32_t lin
         ext2_make_space();
     }
 
-    struct error_message * message = calloc(1, sizeof(struct error_message));
+    struct error_message *message = calloc(1, sizeof(struct error_message));
     if (message == 0) {
         printf("[EXT2] Failed to allocate memory for error message\n");
         free(error);
@@ -132,38 +129,43 @@ void ext2_add_error(char * error, const char* function, char* file, uint32_t lin
 
     if (strlen(function) > ERROR_FUNC_SIZE) {
         message->function = malloc(strlen("Function name too long"));
-        strncpy(message->function, "Function name too long", strlen("Function name too long"));
+        strncpy(message->function, "Function name too long",
+                strlen("Function name too long"));
     } else {
         message->function = malloc(strlen(function));
         strncpy(message->function, function, strlen(function));
     }
 
-
     if ((strlen(file) - strlen(debug_base_path)) > ERROR_FILE_SIZE) {
         message->file = malloc(strlen("File name too long"));
-        strncpy(message->file, "File name too long", strlen("File name too long"));
+        strncpy(message->file, "File name too long",
+                strlen("File name too long"));
     } else {
         if (strlen(file) <= strlen(debug_base_path)) {
             if (strlen(file) > ERROR_FILE_SIZE) {
                 message->file = malloc(strlen("File name too long"));
-                strncpy(message->file, "File name too long", strlen("File name too long"));
+                strncpy(message->file, "File name too long",
+                        strlen("File name too long"));
             } else {
                 message->file = malloc(strlen(file));
                 strncpy(message->file, file, strlen(file));
             }
-        
+
         } else {
             if (strncmp(file, debug_base_path, strlen(debug_base_path)) == 0) {
-                if (strlen(file)-strlen(debug_base_path) > ERROR_FILE_SIZE) {
+                if (strlen(file) - strlen(debug_base_path) > ERROR_FILE_SIZE) {
                     message->file = malloc(strlen("File name too long"));
-                    strncpy(message->file, "File name too long", strlen("File name too long"));
+                    strncpy(message->file, "File name too long",
+                            strlen("File name too long"));
                 } else {
-                    message->file = malloc(strlen(file)-strlen(debug_base_path));
-                    strncpy(message->file, file+strlen(debug_base_path), strlen(file)-strlen(debug_base_path));
+                    message->file =
+                        malloc(strlen(file) - strlen(debug_base_path));
+                    strncpy(message->file, file + strlen(debug_base_path),
+                            strlen(file) - strlen(debug_base_path));
                 }
             }
         }
-    }    
+    }
 
     message->type = type;
     message->line = line;
@@ -180,7 +182,7 @@ uint8_t ext2_has_errors(uint8_t min_level) {
         return 0;
     }
 
-    struct error_message * message = error_messages;
+    struct error_message *message = error_messages;
     while (message != 0) {
         if (message->type >= min_level) {
             return 1;
@@ -196,19 +198,20 @@ void ext2_print_errors(uint8_t min_level) {
         return;
     }
 
-    struct error_message * message = error_messages;
+    struct error_message *message = error_messages;
     while (message != 0) {
         if (message->type >= min_level) {
-            printf("[EXT2] [%s] %-128s [%s]\n", error_type_names[message->type], message->msg, message->function);
+            printf("[EXT2] [%s] %-128s [%s]\n", error_type_names[message->type],
+                   message->msg, message->function);
         }
         message = message->next;
     }
 }
 
 void ext2_clear_errors() {
-    struct error_message * message = error_messages;
+    struct error_message *message = error_messages;
     while (message != 0) {
-        struct error_message * next = message->next;
+        struct error_message *next = message->next;
         free(message->msg);
         free(message->function);
         free(message->file);
@@ -218,11 +221,11 @@ void ext2_clear_errors() {
     error_messages = 0;
 }
 
-void ext2_flush_required(struct ext2_partition * partition) {
+void ext2_flush_required(struct ext2_partition *partition) {
     partition->flush_required = 1;
 }
 
-void ext2_flush_partition(struct ext2_partition * partition) {
+void ext2_flush_partition(struct ext2_partition *partition) {
     EXT2_DEBUG("Flushing structures for partition %s", partition->name);
     ext2_operate_on_bg(partition, ext2_flush_bg);
     ext2_operate_on_bg(partition, ext2_flush_sb);
@@ -233,21 +236,23 @@ void ext2_flush_partition(struct ext2_partition * partition) {
 void ext2_flush_all_partitions() {
     uint32_t partitions = ext2_partition_count_partitions();
     for (uint32_t i = 0; i < partitions; i++) {
-        struct ext2_partition * partition = ext2_partition_get_partition_by_index(i);
+        struct ext2_partition *partition =
+            ext2_partition_get_partition_by_index(i);
         if (partition->flush_required) {
             ext2_flush_partition(partition);
         }
     }
 }
 
-uint8_t ext2_is_flush_required(struct ext2_partition * partition) {
+uint8_t ext2_is_flush_required(struct ext2_partition *partition) {
     return partition->flush_required;
 }
 
 uint8_t ext2_is_any_flush_required() {
     uint32_t partitions = ext2_partition_count_partitions();
     for (uint32_t i = 0; i < partitions; i++) {
-        struct ext2_partition * partition = ext2_partition_get_partition_by_index(i);
+        struct ext2_partition *partition =
+            ext2_partition_get_partition_by_index(i);
         if (partition->flush_required) {
             return 1;
         }

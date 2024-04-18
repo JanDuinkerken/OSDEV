@@ -1,12 +1,12 @@
 #ifndef _GPT_H
 #define _GPT_H
 
-#include <stdint.h>
 #include "../vfs.h"
+#include <stdint.h>
 
-#define GPT_SIGNATURE	0x5452415020494645
-#define GPT_EFI_ENTRY   "c12a7328-f81f-11d2-ba4b-00a0c93ec93b"
-#define GPT_NO_ENTRY    "00000000-0000-0000-0000-000000000000"
+#define GPT_SIGNATURE 0x5452415020494645
+#define GPT_EFI_ENTRY "c12a7328-f81f-11d2-ba4b-00a0c93ec93b"
+#define GPT_NO_ENTRY "00000000-0000-0000-0000-000000000000"
 
 struct gpt_header {
     uint64_t signature;
@@ -35,6 +35,8 @@ struct gpt_entry {
     uint16_t name[36];
 } __attribute__((packed));
 
-uint32_t read_gpt(const char* disk, struct vfs_partition* partitions, void (*add_part)(struct vfs_partition*, uint32_t, uint32_t, uint8_t, uint8_t));
-//uint8_t test_disk(const char*, struct partition*);
+uint32_t read_gpt(const char *disk, struct vfs_partition *partitions,
+                  void (*add_part)(struct vfs_partition *, uint32_t, uint32_t,
+                                   uint8_t, uint8_t));
+// uint8_t test_disk(const char*, struct partition*);
 #endif

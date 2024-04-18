@@ -1,8 +1,8 @@
 #ifndef _TTY_DD_H
 #define _TTY_DD_H
 
-#include <stdint.h>
 #include "tty.h"
+#include <stdint.h>
 
 #define DEVICE_TTY 0xe
 
@@ -16,6 +16,8 @@
 #define TTY_DD_NAME "TTY DRIVER\0"
 
 void init_tty_dd();
-uint64_t tty_dd_read_block_direct(struct tty* dev, uint64_t size, uint64_t skip, uint8_t* buffer);
-uint64_t tty_dd_write_block_direct(struct tty* dev, uint64_t size, uint64_t skip, uint8_t* buffer);
+uint64_t tty_dd_read_block_direct(struct tty *dev, uint64_t size, uint64_t skip,
+                                  uint8_t *buffer);
+uint64_t tty_dd_write_block_direct(struct tty *dev, uint64_t size,
+                                   uint64_t skip, uint8_t *buffer);
 #endif
