@@ -1,7 +1,7 @@
 #ifndef _MBR_H
 #define _MBR_H
-#include "../vfs.h"
 #include <stdint.h>
+#include "../vfs.h"
 
 struct mbr_partition {
     uint8_t attributes;
@@ -20,7 +20,5 @@ struct mbr_header {
     uint16_t signature;
 } __attribute__((packed));
 
-uint32_t read_mbr(const char *disk, struct vfs_partition *partitions,
-                  void (*add_part)(struct vfs_partition *, uint32_t, uint32_t,
-                                   uint8_t, uint8_t));
+uint32_t read_mbr(const char* disk, struct vfs_partition* partitions, void (*add_part)(struct vfs_partition*, uint32_t, uint32_t, uint8_t, uint8_t));
 #endif

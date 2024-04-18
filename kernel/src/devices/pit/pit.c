@@ -1,8 +1,8 @@
 #include "pit.h"
-#include "../../bootservices/bootservices.h"
-#include "../../io/interrupts.h"
-#include "../../io/io.h"
 #include "../../util/printf.h"
+#include "../../io/io.h"
+#include "../../io/interrupts.h"
+#include "../../bootservices/bootservices.h"
 
 struct pit pit;
 
@@ -17,10 +17,10 @@ struct pit pit;
 #define TIMER_IRQ 0
 
 void timer_phase(int hz) {
-    int divisor = (7159090 + 6 / 2) / (6 * hz);
-    outb(PIT_CONTROL, PIT_SET);
-    outb(PIT_A, divisor & PIT_MASK);
-    outb(PIT_A, (divisor >> 8) & PIT_MASK);
+	int divisor = (7159090 + 6/2) / (6 * hz);
+	outb(PIT_CONTROL, PIT_SET);
+	outb(PIT_A, divisor & PIT_MASK);
+	outb(PIT_A, (divisor >> 8) & PIT_MASK);
 }
 
 void init_pit(int hertz) {
@@ -31,56 +31,54 @@ void init_pit(int hertz) {
     pit.preemption_ticks = 0;
     pit.preemption_enabled = 0;
     pit.hertz = hertz;
-    pit.wakeup_handler = (void *)0x0;
+    pit.wakeup_handler = (void*)0x0;
     pit.wakeup_ticks = 0;
 
     printf("Hertz: %d\n", hertz);
-
+    
     timer_phase(hertz);
 }
 
-void tick() { pit.timer_ticks++; }
-
-void wakeup() { pit.wakeup_handler(); }
-
-uint8_t requires_wakeup() {
-    return (pit.wakeup_handler != 0x0 && pit.wakeup_ticks != 0 &&
-            pit.timer_ticks % pit.wakeup_ticks);
+void tick() {
+    pit.timer_ticks++;
 }
 
-uint64_t seconds_to_ticks(uint64_t seconds) { return seconds * pit.hertz; }
+void wakeup() {
+    pit.wakeup_handler();
+}
+
+uint8_t requires_wakeup() {
+    return (pit.wakeup_handler != 0x0 && pit.wakeup_ticks != 0 && pit.timer_ticks % pit.wakeup_ticks);
+}
+
+uint64_t seconds_to_ticks(uint64_t seconds) {
+    return seconds * pit.hertz;
+}
 
 uint64_t ticks_to_seconds(uint64_t ticks) {
-    if (pit.hertz == 0)
-        return 0;
-    if (ticks == 0)
-        return 0;
-    if (ticks < pit.hertz)
-        return 1;
+    if (pit.hertz == 0) return 0;
+    if (ticks == 0) return 0;
+    if (ticks < pit.hertz) return 1;
     return ticks / pit.hertz;
 }
 
 uint64_t ticks_to_ms(uint64_t ticks) {
-    if (pit.hertz == 0)
-        return 0;
-    if (ticks == 0)
-        return 0;
-    if ((ticks * 1000) < pit.hertz)
-        return 1000;
+    if (pit.hertz == 0) return 0;
+    if (ticks == 0) return 0;
+    if ((ticks * 1000)< pit.hertz) return 1000;
     return (ticks * 1000) / pit.hertz;
 }
 
 uint64_t ms_to_ticks(uint64_t ms) {
-    // printf("MS: %d PITH: %ld\n", ms, pit.hertz);
+    //printf("MS: %d PITH: %ld\n", ms, pit.hertz);
     uint64_t cuak = ms * pit.hertz;
-    if (cuak < 1000)
-        return 1;
-    return cuak / 1000;
+    if (cuak < 1000) return 1;
+    return cuak / 1000; 
 }
 
-void set_wakeup_call(void (*handler)(), uint64_t ticks) {
+void set_wakeup_call(void (* handler)(), uint64_t ticks) {
     if (handler == 0x0) {
-        pit.wakeup_handler = (void *)0x0;
+        pit.wakeup_handler = (void*)0x0;
         pit.wakeup_ticks = 0;
     } else {
         pit.wakeup_handler = handler;
@@ -88,30 +86,40 @@ void set_wakeup_call(void (*handler)(), uint64_t ticks) {
     }
 }
 
-void set_preeption_ticks(uint64_t ticks) { pit.preemption_ticks = ticks; }
+void set_preeption_ticks(uint64_t ticks) {
+    pit.preemption_ticks = ticks;
+}
 
-void preempt_toggle() { pit.preemption_enabled = !pit.preemption_enabled; }
+void preempt_toggle() {
+    pit.preemption_enabled = !pit.preemption_enabled;
+}
 
 uint8_t requires_preemption() {
-    if (!pit.preemption_enabled || !pit.preemption_ticks)
-        return 0;
+    if (!pit.preemption_enabled || !pit.preemption_ticks) return 0;
     return pit.timer_ticks % pit.preemption_ticks == 0;
 }
 
-void enable_preemption() { pit.preemption_enabled = 1; }
+void enable_preemption() {
+    pit.preemption_enabled = 1;
+}
 
 void sleep_ticks(uint64_t ticks) {
     uint64_t start_time = pit.timer_ticks;
     __asm__("sti");
     while (pit.timer_ticks - start_time < ticks) {
-        // Yield!
+        //Yield!
     }
     __asm__("cli");
 }
 
-void sleep(uint64_t seconds) { sleep_ticks(seconds_to_ticks(seconds)); }
+void sleep(uint64_t seconds) {
+    sleep_ticks(seconds_to_ticks(seconds));
+}
 
-uint64_t get_ticks_since_boot() { return pit.timer_ticks; }
+uint64_t get_ticks_since_boot() {
+    return pit.timer_ticks;
+}
+
 
 uint64_t get_epoch() {
     return pit.boot_epoch + ticks_to_seconds(pit.timer_ticks);

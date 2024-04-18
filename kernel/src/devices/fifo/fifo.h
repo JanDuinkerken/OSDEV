@@ -13,11 +13,12 @@ struct fifo {
     uint8_t free;
 };
 
+
 struct fifo *fifo_alloc(uint64_t size);
 void fifo_free(struct fifo *fifo);
 uint8_t fifo_put(struct fifo *fifo, uint8_t data);
 uint8_t fifo_get(struct fifo *fifo);
 uint64_t fifo_size(struct fifo *fifo);
 void fifo_flush(struct fifo *fifo);
-const char *register_fifo(char *(*cb)(void *, uint8_t, uint64_t));
+const char* register_fifo(char* (*cb)(void*, uint8_t, uint64_t));
 #endif

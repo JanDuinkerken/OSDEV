@@ -1,7 +1,7 @@
 #ifndef _ACPI_H
 #define _ACPI_H
 
-// https://wiki.osdev.org/FADT
+//https://wiki.osdev.org/FADT
 #include <stdint.h>
 
 #define RSDP_SIGNATURE "RSD PTR "
@@ -62,32 +62,32 @@
 #define XENV_SIGNATURE "XENV"
 #define XSDT_SIGNATURE "XSDT"
 
-#define ADDRESS_SPACE_SYSTEM_MEMORY 0
-#define ADDRESS_SPACE_SYSTEM_IO 1
-#define ADDRESS_SPACE_PCI_CONFIGURATION_SPACE 2
-#define ADDRESS_SPACE_EMBEDDED_CONTROLLER 3
-#define ADDRESS_SPACE_SMBUS 4
-#define ADDRESS_SPACE_CMOS 5
-#define ADDRESS_SPACE_PCI_BAR_TARGET 6
-#define ADDRESS_SPACE_IPMI 7
-#define ADDRESS_SPACE_GENERAL_PURPOSE_IO 8
-#define ADDRESS_SPACE_GENERIC_SERIAL_BUS 9
-#define ADDRESS_SPACE_PLATFORM_COMMUNICATION_CHANNEL 10
+#define ADDRESS_SPACE_SYSTEM_MEMORY                     0
+#define ADDRESS_SPACE_SYSTEM_IO                         1
+#define ADDRESS_SPACE_PCI_CONFIGURATION_SPACE           2
+#define ADDRESS_SPACE_EMBEDDED_CONTROLLER               3
+#define ADDRESS_SPACE_SMBUS                             4
+#define ADDRESS_SPACE_CMOS                              5
+#define ADDRESS_SPACE_PCI_BAR_TARGET                    6
+#define ADDRESS_SPACE_IPMI                              7
+#define ADDRESS_SPACE_GENERAL_PURPOSE_IO                8
+#define ADDRESS_SPACE_GENERIC_SERIAL_BUS                9
+#define ADDRESS_SPACE_PLATFORM_COMMUNICATION_CHANNEL    10
 
-#define ACCESS_SIZE_UNDEFINED 0
-#define ACCESS_SIZE_BYTE 1
-#define ACCESS_SIZE_WORD 2
-#define ACCESS_SIZE_DWORD 3
-#define ACCESS_SIZE_QWORD 4
+#define ACCESS_SIZE_UNDEFINED                           0
+#define ACCESS_SIZE_BYTE                                1
+#define ACCESS_SIZE_WORD                                2
+#define ACCESS_SIZE_DWORD                               3
+#define ACCESS_SIZE_QWORD                               4
 
-#define PM_PROFILE_UNSPECIFIED 0
-#define PM_PROFILE_DESKTOP 1
-#define PM_PROFILE_MOBILE 2
-#define PM_PROFILE_WORKSTATION 3
-#define PM_PROFILE_ENTERPRISE_SERVER 4
-#define PM_PROFILE_SOHO_SERVER 5
-#define PM_PROFILE_APPLIANCE_PC 6
-#define PM_PROFILE_PERFORMANCE_SERVER 7
+#define PM_PROFILE_UNSPECIFIED                          0
+#define PM_PROFILE_DESKTOP                              1
+#define PM_PROFILE_MOBILE                               2
+#define PM_PROFILE_WORKSTATION                          3
+#define PM_PROFILE_ENTERPRISE_SERVER                    4
+#define PM_PROFILE_SOHO_SERVER                          5
+#define PM_PROFILE_APPLIANCE_PC                         6
+#define PM_PROFILE_PERFORMANCE_SERVER                   7
 
 struct rsdp_descriptor {
     char signature[8];
@@ -95,7 +95,7 @@ struct rsdp_descriptor {
     char oem_id[6];
     uint8_t revision;
     uint32_t rsdt_address;
-} __attribute__((packed));
+} __attribute__ ((packed));
 
 struct rsdp2_descriptor {
     struct rsdp_descriptor first_part;
@@ -104,7 +104,7 @@ struct rsdp2_descriptor {
     uint64_t xsdt_address;
     uint8_t extended_checksum;
     uint8_t reserved[3];
-} __attribute__((packed));
+} __attribute__ ((packed));
 
 struct acpi_sdt_header {
     char signature[4];
@@ -116,28 +116,28 @@ struct acpi_sdt_header {
     uint32_t oem_revision;
     uint32_t creator_id;
     uint32_t creator_revision;
-} __attribute__((packed));
+} __attribute__ ((packed));
 
 struct rsdt {
     struct acpi_sdt_header header;
     uint32_t pointer_other_sdt[];
-} __attribute__((packed));
+} __attribute__ ((packed)); 
 
 struct xsdt {
-    struct acpi_sdt_header header;
-    uint64_t pointer_other_sdt[];
-} __attribute__((packed));
+  struct acpi_sdt_header header;
+  uint64_t pointer_other_sdt[];
+} __attribute__ ((packed));
 
 struct mcfg_header {
     struct acpi_sdt_header header;
     uint64_t reserved;
-} __attribute__((packed));
+} __attribute__ ((packed));
 
 struct madt_header {
     struct acpi_sdt_header header;
     uint32_t local_apic_address;
-    uint32_t flags; // 1 for dual 8259 PIC, 0 for single
-} __attribute__((packed));
+    uint32_t flags; //1 for dual 8259 PIC, 0 for single
+} __attribute__ ((packed));
 
 struct generic_address_structure {
     uint8_t address_space;
@@ -145,7 +145,7 @@ struct generic_address_structure {
     uint8_t bit_offset;
     uint8_t access_size;
     uint64_t address;
-} __attribute__((packed));
+} __attribute__ ((packed));
 
 struct fadt_header {
     struct acpi_sdt_header header;
@@ -212,11 +212,11 @@ struct fadt_header {
     struct generic_address_structure x_pm_timer_block;
     struct generic_address_structure x_gpe0_block;
     struct generic_address_structure x_gpe1_block;
-} __attribute__((packed));
+} __attribute__ ((packed));
 
-struct mcfg_header *get_acpi_mcfg();
-struct madt_header *get_acpi_madt();
-struct fadt_header *get_acpi_fadt();
+struct mcfg_header* get_acpi_mcfg();
+struct madt_header* get_acpi_madt();
+struct fadt_header* get_acpi_fadt();
 void init_acpi();
 void enumerate_tables();
 #endif
