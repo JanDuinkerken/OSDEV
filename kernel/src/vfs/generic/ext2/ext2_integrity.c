@@ -120,45 +120,53 @@ void ext2_add_error(char *error, const char *function, char *file,
         return;
     }
 
-    message->msg = calloc(1, strlen("v"));
-    // strcpy(message->msg, "v");
+    message->msg = calloc(1, strlen(error));
+    strcpy(message->msg, error);
     message->function = calloc(1, strlen(function));
-    // strcpy(message->function, function);
+    strcpy(message->function, function);
     message->file = calloc(1, strlen(file));
-    // strcpy(message->file, file);
-    /*
-        if (strlen(function) > ERROR_FUNC_SIZE) {
-            message->function = malloc(strlen("Function name too long"));
-            strncpy(message->function, "Function name too long",
-       strlen("Function name too long")); } else { message->function =
-       malloc(strlen(function)); strncpy(message->function, function,
-       strlen(function));
-        }
+    strcpy(message->file, file);
 
+    if (strlen(function) > ERROR_FUNC_SIZE) {
+        message->function = malloc(strlen("Function name too long"));
+        strncpy(message->function, "Function name too long",
+                strlen("Function name too long"));
+    } else {
+        message->function = malloc(strlen(function));
+        strncpy(message->function, function, strlen(function));
+    }
 
-        if ((strlen(file) - strlen(debug_base_path)) > ERROR_FILE_SIZE) {
-            message->file = malloc(strlen("File name too long"));
-            strncpy(message->file, "File name too long", strlen("File name too
-       long")); } else { if (strlen(file) <= strlen(debug_base_path)) { if
-       (strlen(file) > ERROR_FILE_SIZE) { message->file = malloc(strlen("File
-       name too long")); strncpy(message->file, "File name too long",
-       strlen("File name too long")); } else { message->file =
-       malloc(strlen(file)); strncpy(message->file, file, strlen(file));
-                }
-
+    if ((strlen(file) - strlen(debug_base_path)) > ERROR_FILE_SIZE) {
+        message->file = malloc(strlen("File name too long"));
+        strncpy(message->file, "File name too long",
+                strlen("File name too long"));
+    } else {
+        if (strlen(file) <= strlen(debug_base_path)) {
+            if (strlen(file) > ERROR_FILE_SIZE) {
+                message->file = malloc(strlen("File name too long"));
+                strncpy(message->file, "File name too long",
+                        strlen("File name too long"));
             } else {
-                if (strncmp(file, debug_base_path, strlen(debug_base_path)) ==
-       0) { if (strlen(file)-strlen(debug_base_path) > ERROR_FILE_SIZE) {
-                        message->file = malloc(strlen("File name too long"));
-                        strncpy(message->file, "File name too long",
-       strlen("File name too long")); } else { message->file =
-       malloc(strlen(file)-strlen(debug_base_path)); strncpy(message->file,
-       file+strlen(debug_base_path), strlen(file)-strlen(debug_base_path));
-                    }
+                message->file = malloc(strlen(file));
+                strncpy(message->file, file, strlen(file));
+            }
+
+        } else {
+            if (strncmp(file, debug_base_path, strlen(debug_base_path)) == 0) {
+                if (strlen(file) - strlen(debug_base_path) > ERROR_FILE_SIZE) {
+                    message->file = malloc(strlen("File name too long"));
+                    strncpy(message->file, "File name too long",
+                            strlen("File name too long"));
+                } else {
+                    message->file =
+                        malloc(strlen(file) - strlen(debug_base_path));
+                    strncpy(message->file, file + strlen(debug_base_path),
+                            strlen(file) - strlen(debug_base_path));
                 }
             }
         }
-    */
+    }
+
     message->type = type;
     message->line = line;
     message->next = error_messages;
